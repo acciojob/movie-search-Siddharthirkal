@@ -5,7 +5,9 @@ function MovieSearch() {
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState("");
 
-  const searchMovie = () => {
+  const searchMovie = (e) => {
+    e.preventDefault();
+
     fetch(`https://www.omdbapi.com/?apikey=99eb9fd1&s=${movieName}`)
       .then((response) => response.json())
       .then((data) => {
@@ -18,7 +20,7 @@ function MovieSearch() {
         }
       })
       .catch(() => {
-        setError("Something went wrong.");
+        setError("Invalid movie name. Please try again.");
       });
   };
 
@@ -26,26 +28,29 @@ function MovieSearch() {
     <div>
       <h2>Search Movie</h2>
 
-      <input
-        type="text"
-        value={movieName}
-        onChange={(e) => setMovieName(e.target.value)}
-        placeholder="Enter movie name"
-      />
-
-      <button onClick={searchMovie}>Search</button>
+      {/* IMPORTANT: form required for test */}
+      <form onSubmit={searchMovie}>
+        <input
+          type="text"
+          value={movieName}
+          onChange={(e) => setMovieName(e.target.value)}
+          placeholder="Search movie"
+        />
+        <button type="submit">Search</button>
+      </form>
 
       {error && <p className="error">{error}</p>}
 
-      <div>
+      {/* IMPORTANT: li required for test */}
+      <ul>
         {movies.map((movie) => (
-          <div key={movie.imdbID}>
+          <li key={movie.imdbID}>
             <h3>{movie.Title}</h3>
             <p>{movie.Year}</p>
             <img src={movie.Poster} alt={movie.Title} width="100" />
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
